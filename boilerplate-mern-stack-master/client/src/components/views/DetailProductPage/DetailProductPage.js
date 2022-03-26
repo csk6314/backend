@@ -1,26 +1,46 @@
-import React,{useEffect} from 'react'
-import axios from 'axios'
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import ProductImage from "./Sections/ProductImage";
+import ProductInfo from "./Sections/ProductInfo";
+import { Row, Col } from "antd";
 
 const DetailProductPage = (props) => {
+  const productId = props.match.params.productId;
+  const [Product, setProduct] = useState({});
 
-    const productId = props.match.params.productId;
-
-    useEffect(() => {
-      axios.get(`/api/product/products_by_id?id=${productId}&type=single`)
-        .then(res=>{
-            if(res.data.success) {
-                console.log(res.data);
-            } else {
-                alert('상세정보 가져오기를 실패했습니다.');
-            }
-
-        });
-    }, [])
-    
+  useEffect(() => {
+    axios
+      .get(`/api/product/products_by_id?id=${productId}&type=single`)
+      .then((res) => {
+        if (res.data.success) {
+          setProduct(res.data.product[0]);
+        } else {
+          alert("상세정보 가져오기를 실패했습니다.");
+        }
+      });
+  }, []);
 
   return (
-    <div>DetailProductPage</div>
-  )
-}
+    <div style={{ width: "100%", padding: "3rem 4rem" }}>
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <h1>{Product.title}</h1>
+      </div>
 
-export default DetailProductPage
+      <br />
+
+      <Row gutter={[16, 16]}>
+        <Col lg={12} sm={24}>
+          {/* ProductImage */}
+
+          <ProductImage detail={Product} />
+        </Col>
+        <Col lg={12} sm={24}>
+          {/* ProductInfo */}
+          <ProductInfo />
+        </Col>
+      </Row>
+    </div>
+  );
+};
+
+export default DetailProductPage;
