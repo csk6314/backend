@@ -93,7 +93,12 @@ router.get('/products_by_id',(req,res)=> {
     let type = req.query.type;
     let productId = req.query.id;    
 
-
+    if(type==="array") {
+      let ids = req.query.id.split(',');
+      productId = ids.map(item=> {
+        return item
+      });
+    }
     //product id를 이용해서 같은 id의 상품을 가져온다.
 
     Product.find({_id:productId})
